@@ -1,0 +1,189 @@
+# Chrome Extension MV3 – Cursor Rules
+# Purpose: Keep the codebase secure, minimal-permission, and MV3-correct while using TS + Vite.
+# Scope: Popup UI, Options page, Background Service Worker, Content Scripts, and messaging.
+
+## Tech & Project Defaults
+- Always use TypeScript (strict mode). No any unless truly unavoidable.
+- Build with Vite (library mode where appropriate). Output to /dist.
+- Module resolution: path aliases via tsconfig.json ("@/*" -> "src/*").
+- DOM framework: vanilla TS + minimal utilities OR React if a UI is needed (Popup/Options only). If React is introduced, use functional components + hooks only, no legacy lifecycle APIs.
+
+## File & Folder Structure
+- /src
+  - /background       -> service_worker.ts (MV3)
+  - /content          -> contentScript.ts
+  - /injection        -> (optional) safely injected page helpers (stringified, no bundler globals)
+  - /popup            -> UI code (index.html, main.tsx, App.tsx)
+  - /options          -> UI code (index.html, main.tsx, App.tsx)
+  - /shared           -> types, utils, constants, messaging helpers
+  - /styles           -> global.css (keep tiny)
+  - /assets           -> static assets used by popup/options only
+- manifest.json       -> MV3 only
+- vite.config.ts      -> builds background, content, popup, options as separate entries
+- tsconfig.json       -> strict, noImplicitAny, exactOptionalPropertyTypes
+- .eslintrc.cjs       -> eslint + @typescript-eslint, plugin:security/recommended
+- .prettierrc         -> consistent formatting
+- .cursorrules        -> this file
+- /test               -> vitest unit tests (no DOM-dependent tests unless jsdom)
+- /e2e                -> Playwright tests for popup/options
+- /dist               -> build output
+
+## Manifest (MV3) Rules
+- Use "manifest_version": 3 (no MV2).
+- Minimal permissions only. Start with none; add on demand. Prefer "activeTab" over broad host permissions.
+- Use "host_permissions" instead of wildcards; prefer specific origins.
+- Background must be "service_worker": "src/background/service_worker.js" (built path).
+- Content scripts declared explicitly with matches; no "<all_urls>" unless truly necessary.
+- Use "action" for popup; "options_page" or "options_ui" (open_in_tab: true).
+- If using icons, include 16/32/48/128. Keep images small and optimized.
+
+## Messaging & Architecture
+- Use chrome.runtime.sendMessage/onMessage for one-offs and chrome.runtime.connect for long-lived ports.
+- Create a small shared messaging layer in /src/shared/messaging.ts:
+  - Define typed message names and payload interfaces.
+  - Validate incoming messages (narrow by type).
+- Content scripts never directly touch extension storage for privileged data; route through background when needed.
+- Use chrome.scripting.executeScript for programmatic injection (avoid <script> tags).
+- Avoid chrome.tabs.executeScript (deprecated in MV3).
+
+## Storage & State
+- Use chrome.storage.session for ephemeral data and chrome.storage.local for persistent extension state.
+- Wrap storage in typed helpers (/src/shared/storage.ts) with schema validation (zod).
+- Never store secrets or tokens in code or storage. If OAuth needed, use chrome.identity + server exchange patterns.
+
+## Security Hardening
+- No eval, new Function, or dynamic code from remote origins.
+- Sanitize any HTML you did not generate yourself (DOMPurify) before insertAdjacentHTML or dangerouslySetInnerHTML.
+- Follow MV3 CSP: no inline scripts or unsafe-eval; all scripts must be bundled.
+- Avoid broad host permissions. If needed, requestOptionalPermissions flow with clear UX.
+- Never inject third-party scripts directly into the page context; where unavoidable, use isolated world content scripts.
+- Validate all messages (origin, expected shape). Ignore unknown message types by default.
+
+## UI (Popup/Options) Conventions
+- Keep bundles tiny. Code-split large UI libs. Lazy-load routes/sections if React is used.
+- Use semantic HTML and basic accessibility (labels, roles, tab order, focus management).
+- Don’t block the main thread; move heavy work to workers/background.
+
+## Content Scripts
+- Minimal footprint: query DOM efficiently, observe with MutationObserver (throttled), disconnect on teardown.
+- Never rely on window globals from the page; use isolated world.
+- When you must interact with page JS, inject a small “bridge” script via chrome.scripting.executeScript that posts window events—clearly namespaced.
+
+## Background Service Worker
+- Event-driven only. Avoid long-running loops/timeouts that keep it alive.
+- Use alarms for scheduled tasks. Keep handlers short, offload heavy work to lightweight chunks and return.
+- Always wrap chrome.* APIs in Promise helpers for async/await ergonomics.
+
+## Network Policy
+- Prefer declarativeNetRequest for blocking/redirect features when possible.
+- For fetch() from extension:
+  - Respect CORS and MV3 CSP.
+  - AbortController for timeouts.
+  - Validate and type responses; handle non-200s.
+
+## Logging & Error Handling
+- Centralized logger (/src/shared/log.ts) with leveled logging; in production, keep logs minimal.
+- Never leak PII/URLs in logs.
+- Use try/catch with typed errors; surface user-visible errors in the UI where appropriate.
+
+## Performance
+- Tree-shake aggressively. No unused polyfills.
+- Avoid large dependencies; prefer small utilities.
+- Debounce/throttle DOM and messaging chatter.
+
+## Testing
+- Unit: Vitest for shared utils and messaging/storage wrappers.
+- E2E: Playwright for popup/options happy paths.
+- Add a smoke test that loads the built extension in headless Chromium and asserts manifest basics.
+
+## Linting & Formatting
+- ESLint: @typescript-eslint/recommended, plugin:security/recommended, sonarjs, import/order.
+- Prettier on commit. Husky + lint-staged for staged files.
+
+## i18n & A11y (If Needed)
+- Use _locales with messages.json keys. No hard-coded UI strings.
+- Include lang attributes, keyboard nav, and color-contrast checks.
+
+## Release & Versioning
+- Use semantic versioning in manifest.version.
+- Build script must produce a signed zip artifact in /release with content hashes.
+- Generate a CHANGELOG.md entry each release (Keep a Changelog style).
+
+## Cursor Behavioral Rules
+- When adding code, also add/update:
+  - Types, unit tests (if logic), and minimal docs (README section).
+  - Permissions and host_permissions remain smallest possible; justify increases in PR description.
+- Do not introduce new frameworks without an explicit request in the same edit.
+- Prefer small, single-purpose modules over large files (>300 LOC discouraged).
+- For any new feature, scaffold:
+  - Types in /src/shared/types.ts
+  - Messaging contract updates
+  - Background handler
+  - Optional UI affordance (popup/options)
+  - Tests (unit/e2e as applicable)
+- If information is missing (e.g., exact host match patterns), generate sensible placeholders and leave TODO comments with a short checklist.
+
+## Code Snippets (Templates the AI should reuse)
+
+### manifest.json (MV3, minimal)
+{
+  "manifest_version": 3,
+  "name": "My Extension",
+  "version": "0.1.0",
+  "action": { "default_popup": "popup/index.html" },
+  "background": { "service_worker": "background/service_worker.js", "type": "module" },
+  "options_page": "options/index.html",
+  "permissions": ["storage"],
+  "host_permissions": [],
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "content_scripts": [
+    { "matches": ["https://example.com/*"], "js": ["content/contentScript.js"] }
+  ]
+}
+
+### messaging.ts (typed)
+export type Msg =
+  | { type: "PING" }
+  | { type: "GET_STATE" }
+  | { type: "SET_STATE"; payload: Partial<State> };
+
+export function sendMsg<T extends Msg>(msg: T): Promise<unknown> {
+  return new Promise((resolve) => chrome.runtime.sendMessage(msg, resolve));
+}
+chrome.runtime.onMessage.addListener((msg: Msg, _sender, sendResponse) => {
+  switch (msg.type) {
+    case "PING": sendResponse({ ok: true }); break;
+    // add other handlers
+  }
+  return true; // async
+});
+
+### storage.ts (zod-validated)
+import { z } from "zod";
+const StateSchema = z.object({ enabled: z.boolean().default(true) });
+export type State = z.infer<typeof StateSchema>;
+export async function getState(): Promise<State> {
+  const raw = await chrome.storage.local.get(["state"]);
+  return StateSchema.parse(raw.state ?? {});
+}
+export async function setState(patch: Partial<State>) {
+  const next = { ...(await getState()), ...patch };
+  await chrome.storage.local.set({ state: next });
+  return next;
+}
+
+### background/service_worker.ts (module)
+import { getState, setState } from "../shared/storage";
+chrome.runtime.onInstalled.addListener(async () => {
+  await setState({ enabled: true });
+});
+chrome.action.onClicked.addListener(async (tab) => {
+  const state = await getState();
+  await chrome.tabs.sendMessage(tab.id!, { type: "PING" });
+});
+
+### content/contentScript.ts
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg?.type === "PING") sendResponse({ pong: true });
+  return true;
+});

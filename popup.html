@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <title>Lazy Spy - Image Performance Analyzer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <div class="logo">
+        <img src="lazyspylogo.png" alt="Lazy Spy - Image Performance Analyzer" width="120" height="120">
+      </div>
+      <div class="toggle-container">
+        <button id="toggleBtn" class="bomb-toggle">
+          <img src="img-bomb.svg" alt="Activate" width="48" height="48">
+        </button>
+        <div class="toggle-label">Click to Activate</div>
+      </div>
+    </div>
+
+          <div class="content">
+        <div class="section-header">
+          <h2>Performance Summary</h2>
+          <button id="refreshBtn" class="refresh-btn"><img src="img-refresh.svg" alt="Refresh" width="18" height="18"></button>
+        </div>
+        
+        <!-- Performance Score Card -->
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><img src="img-total.svg" alt="Total" width="18" height="18"></div>
+          <div class="stat-info">
+            <div class="stat-number" id="totalImages">0</div>
+            <div class="stat-label">Total Images</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><img src="img-optimized.svg" alt="Optimized" width="18" height="18"></div>
+          <div class="stat-info">
+            <div class="stat-number" id="optimized">0</div>
+            <div class="stat-label">Optimized</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><img src="img-lazy.svg" alt="Lazy" width="18" height="18"></div>
+          <div class="stat-info">
+            <div class="stat-number" id="lazyLoaded">0</div>
+            <div class="stat-label">Lazy Loaded</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><img src="img-eager.svg" alt="Eager" width="18" height="18"></div>
+          <div class="stat-info">
+            <div class="stat-number" id="eagerLoaded">0</div>
+            <div class="stat-label">Eager Loaded</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><img src="img-issue.svg" alt="Issues" width="18" height="18"></div>
+          <div class="stat-info">
+            <div class="stat-number" id="issues">0</div>
+            <div class="stat-label">Issues</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><img src="img-lcp.svg" alt="LCP" width="18" height="18"></div>
+          <div class="stat-info">
+            <div class="stat-number" id="lcpValue">N/A</div>
+            <div class="stat-label">LCP (ms)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Library Detection Section -->
+      <div class="section-header">
+        <h3>Detected Libraries</h3>
+      </div>
+      <div id="libraryInfo" class="library-info">
+        <div class="loading">Analyzing page...</div>
+      </div>
+
+      <div id="tabInfo" class="tab-info"></div>
+      
+      <!-- Export Section -->
+      <div class="export-section">
+        <button id="exportBtn" class="export-btn">Export Report</button>
+      </div>
+    </div>
+  </div>
+      <script src="dist/popup.bundle.js"></script>
+</body>
+</html>

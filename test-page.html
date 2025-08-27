@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lazy Spy Test Page - Enhanced Library Detection</title>
+    
+    <!-- Static preload links for testing -->
+    <link rel="preload" as="image" href="https://placehold.co/200x150/d1d5db/6b7280?text=Preloaded+1" crossorigin="anonymous">
+    <link rel="preload" as="image" href="https://placehold.co/200x150/d1d5db/6b7280?text=Preloaded+2" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        .section h2 {
+            color: #374151;
+            margin-top: 0;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 10px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+        }
+        .image-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .image-label {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .hero-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .lcp-candidate {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+        .info-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin: 5px 0;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕵️ Lazy Spy Enhanced Test Page</h1>
+        
+        <div class="info-box">
+            <h3>🎯 Test Page Features</h3>
+            <ul>
+                <li><strong><img src="icons/color-green.svg" alt="Green" width="16" height="16" style="vertical-align: middle;"> Green:</strong> Properly optimized (preloaded LCP, lazy-loaded below fold)</li>
+                <li><strong><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> Blue:</strong> Lazy loaded images (various libraries)</li>
+                <li><strong><img src="icons/color-yellow.svg" alt="Yellow" width="16" height="16" style="vertical-align: middle;"> Yellow:</strong> Eager loaded images</li>
+                <li><strong><img src="icons/color-red.svg" alt="Red" width="16" height="16" style="vertical-align: middle;"> Red:</strong> Performance issues (missing dimensions, blocking LCP)</li>
+                <li><strong><img src="icons/color-teal.svg" alt="Teal" width="16" height="16" style="vertical-align: middle;"> Teal:</strong> Preloaded images</li>
+                <li><strong><img src="icons/color-purple.svg" alt="Purple" width="16" height="16" style="vertical-align: middle;"> Purple:</strong> LCP candidate images</li>
+            </ul>
+        </div>
+
+        <!-- Hero Image - LCP Candidate -->
+        <div class="section">
+            <h2><img src="icons/color-purple.svg" alt="Purple" width="16" height="16" style="vertical-align: middle;"> LCP Candidate (Above Fold)</h2>
+            <img src="https://placehold.co/800x400/d1d5db/6b7280?text=Hero+Image+LCP+Candidate" alt="Hero Image" class="hero-image" 
+                 fetchpriority="high" decoding="async">
+            <div class="image-label">Hero image with high fetch priority - likely LCP candidate</div>
+        </div>
+
+        <!-- Native Lazy Loading -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> Native Lazy Loading</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Native+Lazy+1" alt="Native Lazy 1" loading="lazy">
+                    <div class="image-label">Native lazy loading</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Native+Lazy+2" alt="Native Lazy 2" loading="lazy">
+                    <div class="image-label">Native lazy loading</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Native+Lazy+3" alt="Native Lazy 3" loading="lazy">
+                    <div class="image-label">Native lazy loading</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LazySizes Library -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> LazySizes Library</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=LazySizes+1" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=LazySizes+1" alt="LazySizes 1" class="lazyload">
+                    <div class="image-label">LazySizes with data-src</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=LazySizes+2" data-srcset="https://placehold.co/200x150/d1d5db/6b7280?text=LazySizes+2 1x, https://placehold.co/400x300/d1d5db/6b7280?text=LazySizes+2+2x 2x" 
+                         data-sizes="(max-width: 600px) 200px, 400px" alt="LazySizes 2" class="lazyload">
+                    <div class="image-label">LazySizes with data-srcset</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=LazySizes+3" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=LazySizes+3" alt="LazySizes 3" class="lazyloaded">
+                    <div class="image-label">LazySizes loaded</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LoZad Library -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> LoZad Library</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=LoZad+1" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=LoZad+1" alt="LoZad 1" class="lozad">
+                    <div class="image-label">LoZad with data-src</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=LoZad+2" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=LoZad+2" alt="LoZad 2" class="lozad">
+                    <div class="image-label">LoZad with data-src</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- React Lazy Load -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> React Lazy Load</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=React+Lazy+1" data-lazy="https://placehold.co/200x150/d1d5db/6b7280?text=React+Lazy+1" alt="React Lazy 1" class="react-lazy-load">
+                    <div class="image-label">React LazyLoad</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=React+Lazy+2" data-lazy="https://placehold.co/200x150/d1d5db/6b7280?text=React+Lazy+2" alt="React Lazy 2" class="react-lazy-load">
+                    <div class="image-label">React LazyLoad</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vue LazyLoad -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> Vue LazyLoad</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Vue+Lazy+1" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=Vue+Lazy+1" alt="Vue Lazy 1" class="v-lazy">
+                    <div class="image-label">Vue LazyLoad</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Vue+Lazy+2" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=Vue+Lazy+2" alt="Vue Lazy 2" class="v-lazy">
+                    <div class="image-label">Vue LazyLoad</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Lazy Loading -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> Custom Lazy Loading</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Custom+1" data-lazy="https://placehold.co/200x150/d1d5db/6b7280?text=Custom+1" alt="Custom 1" class="lazy">
+                    <div class="image-label">Custom lazy loading</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Custom+2" data-original="https://placehold.co/200x150/d1d5db/6b7280?text=Custom+2" alt="Custom 2" class="lazy-image">
+                    <div class="image-label">Custom with data-original</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Custom+3" data-src="https://placehold.co/200x150/d1d5db/6b7280?text=Custom+3" alt="Custom 3" class="lazy-load">
+                    <div class="image-label">Custom lazy-load class</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eager Loading (Performance Issues) -->
+        <div class="section">
+            <h2><img src="icons/color-yellow.svg" alt="Yellow" width="16" height="16" style="vertical-align: middle;"> Eager Loading (Below Fold)</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Eager+1" alt="Eager 1" loading="eager">
+                    <div class="image-label">Eager loading below fold</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Eager+2" alt="Eager 2" loading="eager">
+                    <div class="image-label">Eager loading below fold</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Issues -->
+        <div class="section">
+            <h2><img src="icons/color-red.svg" alt="Red" width="16" height="16" style="vertical-align: middle;"> Performance Issues</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=No+Dimensions" alt="No Dimensions" loading="lazy">
+                    <div class="image-label">Missing width/height attributes</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Above+Fold+Lazy" alt="Above Fold Lazy" loading="lazy">
+                    <div class="image-label">Lazy loading above fold</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Large+Image" alt="Large Image" loading="eager">
+                    <div class="image-label">Large eager-loaded image</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preloaded Images -->
+        <div class="section">
+            <h2><img src="icons/color-teal.svg" alt="Teal" width="16" height="16" style="vertical-align: middle;"> Preloaded Images</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Preloaded+1" alt="Preloaded 1">
+                    <div class="image-label">Preloaded image</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Preloaded+2" alt="Preloaded 2">
+                    <div class="image-label">Preloaded image</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optimized Images -->
+        <div class="section">
+            <h2><img src="icons/color-green.svg" alt="Green" width="16" height="16" style="vertical-align: middle;"> Optimized Images</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Optimized+1" alt="Optimized 1" loading="lazy" width="200" height="150">
+                    <div class="image-label">Optimized with dimensions</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Optimized+2" alt="Optimized 2" loading="lazy" width="200" height="150" decoding="async">
+                    <div class="image-label">Optimized with async decoding</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Optimized+3" alt="Optimized 3" loading="lazy" width="200" height="150" fetchpriority="low">
+                    <div class="image-label">Optimized with low priority</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more content to push images below fold -->
+        <div style="height: 1000px; background: linear-gradient(to bottom, #f8fafc, #e5e7eb); margin: 40px 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+            <div style="text-align: center;">
+                <h3>📜 Scroll Down to See More Images</h3>
+                <p>This space ensures images below are actually below the fold for proper testing</p>
+            </div>
+        </div>
+
+        <!-- Below Fold Images -->
+        <div class="section">
+            <h2><img src="icons/color-blue.svg" alt="Blue" width="16" height="16" style="vertical-align: middle;"> Below Fold Lazy Loading</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Below+Fold+1" alt="Below Fold 1" loading="lazy" width="200" height="150">
+                    <div class="image-label">Below fold - should be lazy</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Below+Fold+2" alt="Below Fold 2" loading="lazy" width="200" height="150">
+                    <div class="image-label">Below fold - should be lazy</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Below+Fold+3" alt="Below Fold 3" loading="lazy" width="200" height="150">
+                    <div class="image-label">Below fold - should be lazy</div>
+                </div>
+                <div class="image-item">
+                    <img src="https://placehold.co/200x150/d1d5db/6b7280?text=Below+Fold+4" alt="Below Fold 4" loading="lazy" width="200" height="150">
+                    <div class="image-label">Below fold - should be lazy</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulate LazySizes library -->
+    <script>
+        // Simulate LazySizes library
+        window.lazySizes = {
+            init: function() {
+                console.log('LazySizes initialized');
+            }
+        };
+        
+        // Simulate LoZad library
+        window.lozad = function() {
+            console.log('LoZad initialized');
+            return {
+                observe: function() {
+                    console.log('LoZad observing');
+                }
+            };
+        };
+
+        // Simulate Intersection Observer usage
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazyload');
+                            img.classList.add('lazyloaded');
+                        }
+                    }
+                });
+            });
+
+            // Observe all lazy images
+            document.querySelectorAll('.lazyload, .lozad, .react-lazy-load, .v-lazy, .lazy, .lazy-image, .lazy-load').forEach(img => {
+                observer.observe(img);
+            });
+        }
+
+        // Preload links are now added statically in the HTML head
+        console.log('Preload links added statically in HTML head');
+    </script>
+</body>
+</html>

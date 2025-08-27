@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Lazy Spy - Image Performance Analyzer",
+  "version": "1.0.0",
+  "description": "Professional image loading analyzer that visualizes lazy loading strategies and performance issues on any webpage.",
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "dist/background.bundle.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "dist/content.bundle.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Lazy Spy"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*",
+        "lazyspylogo.png",
+        "img-*.svg",
+        "img-bomb.svg",
+        "csv-exporter.js",
+        "library-detector.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
